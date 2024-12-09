@@ -1,3 +1,4 @@
+#include <format>
 #include <iostream>
 
 int main() {
@@ -9,4 +10,6 @@ int main() {
 
   std::string input;
   std::getline(std::cin, input);
+
+  std::cout << std::format("{}: command not found", input) << std::endl;
 }
