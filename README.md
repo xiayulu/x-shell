@@ -92,3 +92,58 @@ After each command, the tester will check if `<command_name>: command not found`
 
 - The exact number of commands sent and the command names will be random.
 - Just like the previous stages, all commands will be invalid commands, so the response will always be `<command_name>: command not found`.
+
+### Solution
+
+```c++
+#include <format>
+#include <iostream>
+
+std::string eval(std::string expression) {
+  return std::format("{}: command not found", expression);
+}
+
+int main() {
+  // Flush after every std::cout / std:cerr
+  std::cout << std::unitbuf;
+  std::cerr << std::unitbuf;
+
+  while (true) {
+    std::cout << "$ ";
+
+    std::string input;
+    std::getline(std::cin, input);
+    auto result = eval(input);
+    std::cout << result << std::endl;
+  }
+}
+```
+
+## The exit builtin
+
+In this stage, you'll implement the [exit](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#exit) builtin.
+
+### Tests
+
+The tester will execute your program like this:
+
+```bash
+./your_program.sh
+```
+
+It'll then send an invalid command to your shell, followed by the `exit` command:
+
+```bash
+$ invalid_command_1
+invalid_command_1: command not found
+$ exit 0
+```
+
+After issuing the `exit 0` command, the tester will verify whether your program terminates with [code/status](https://en.wikipedia.org/wiki/Exit_status) 0.
+
+### Notes
+
+- The tester will always pass in `0` as the argument to the `exit` command.
+
+### Solution
+
