@@ -1,10 +1,13 @@
 #include <cstdlib>
 #include <format>
 #include <iostream>
+#include <ostream>
 #include <set>
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include "./utils.h"
 
 std::vector<std::string> parse_cmd(std::string input) {
   std::stringstream ss{input};
@@ -21,7 +24,7 @@ std::vector<std::string> parse_cmd(std::string input) {
 }
 
 bool is_built_in(std::string cmd) {
-  std::set<std::string> builtins{"exit"};
+  std::set<std::string> builtins{"exit", "echo"};
 
   return builtins.find(cmd) != builtins.end();
 }
@@ -37,6 +40,16 @@ void eval_builtins(std::vector<std::string> args) {
     }
 
     exit(code);
+  }
+
+  // echo
+  if (cmd == "echo") {
+    // remove first
+    args.erase(args.begin());
+
+    // join back as string
+    std::cout << li::join(args) << std::endl;
+    return;
   }
 }
 
