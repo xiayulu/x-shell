@@ -100,7 +100,7 @@ void eval_builtins(std::vector<std::string> args) {
     }
 
     // unkown
-    std::cout << std::format("{}: not found", op) << std::endl;
+    std::cout << std::format("{}: not found", op);
   }
 }
 
