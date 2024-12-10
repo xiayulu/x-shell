@@ -365,3 +365,59 @@ The tester will check if the `type` command correctly identifies executable file
 
 - The actual value of the `PATH` environment variable will be random for each test case.
 - `PATH` can contain multiple directories separated by colons (`:`), your program should search for programs in each directory in order and return the first match.
+
+### Solution
+
+```c++
+std::string find_cmd(std::string cmd) {
+  char *path_env = std::getenv("PATH");
+
+  if (path_env == NULL) {
+    return "";
+  }
+
+  auto paths = li::split(std::string_view(path_env), ":");
+
+  for (auto p : paths) {
+    fs::path dir{p};
+    fs::path file{cmd};
+    fs::path full_path = dir / file;
+
+    if (fs::exists(full_path)) {
+      return full_path.string();
+    }
+  }
+
+  return "";
+}
+
+
+//...
+
+	// type
+  if (cmd == "type") {
+    // empty type op
+    if (args.size() <= 1) {
+      return;
+    }
+
+    auto op = args[1];
+
+    // builtins
+    if (is_built_in(op)) {
+      std::cout << std::format("{} is a shell builtin", op) << std::endl;
+      return;
+    }
+
+    // executable files
+    auto op_path = find_cmd(op);
+    if (op_path.size() > 0) {
+      std::cout << std::format("{} is {}", op, op_path) << std::endl;
+      return;
+    }
+
+    // unkown
+    std::cout << std::format("{}: not found", op) << std::endl;
+  }
+```
+

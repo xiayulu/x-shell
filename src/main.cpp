@@ -46,7 +46,7 @@ std::string find_cmd(std::string cmd) {
     fs::path file{cmd};
     fs::path full_path = dir / file;
 
-    if (std::filesystem::exists(full_path)) {
+    if (fs::exists(full_path)) {
       return full_path.string();
     }
   }
