@@ -316,5 +316,52 @@ The tester will check if the `type` command responds correctly based on the comm
 ### Solution
 
 ```c++
+// type
+  if (cmd == "type") {
+    // empty type op
+    if (args.size() <= 1) {
+      return;
+    }
+
+    auto op = args[1];
+
+    if (is_built_in(op)) {
+      std::cout << std::format("{} is a shell builtin", op) << std::endl;
+    } else {
+      std::cout << std::format("{}: not found", op) << std::endl;
+    }
+  }
 ```
 
+## The type builtin: executable files
+
+In this stage, you'll extend the `type` builtin to search for executable files using [PATH](https://en.wikipedia.org/wiki/PATH_(variable)).
+
+[PATH](https://en.wikipedia.org/wiki/PATH_(variable)) is an environment variable that specifies a set of directories where executable programs are located. When a command is received, the  program should search for the command in the directories listed in the PATH environment variable. If the command is  found, the program should print the path to the command. If the command  is not found, the program should print `<command>: not found`.
+
+### Tests
+
+The tester will execute your program with a custom `PATH` like this:
+
+```bash
+PATH="/usr/bin:/usr/local/bin" ./your_program.sh
+```
+
+It'll then send a series of `type` commands to your shell:
+
+```bash
+$ type ls
+ls is /usr/bin/ls
+$ type abcd
+abcd is /usr/local/bin/abcd
+$ type invalid_command
+invalid_command: not found
+$
+```
+
+The tester will check if the `type` command correctly identifies executable files in the PATH.
+
+### Notes
+
+- The actual value of the `PATH` environment variable will be random for each test case.
+- `PATH` can contain multiple directories separated by colons (`:`), your program should search for programs in each directory in order and return the first match.

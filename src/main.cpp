@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <filesystem>
 #include <format>
 #include <iostream>
 #include <ostream>
@@ -8,6 +9,8 @@
 #include <vector>
 
 #include "./utils.h"
+
+namespace fs = std::filesystem;
 
 std::vector<std::string> parse_cmd(std::string input) {
   std::stringstream ss{input};
@@ -27,6 +30,28 @@ bool is_built_in(std::string cmd) {
   std::set<std::string> builtins{"exit", "echo", "type"};
 
   return builtins.find(cmd) != builtins.end();
+}
+
+std::string find_cmd(std::string cmd) {
+  char *path_env = std::getenv("PATH");
+
+  if (path_env == NULL) {
+    return "";
+  }
+
+  auto paths = li::split(std::string_view(path_env), ":");
+
+  for (auto p : paths) {
+    fs::path dir{p};
+    fs::path file{cmd};
+    fs::path full_path = dir / file;
+
+    if (std::filesystem::exists(full_path)) {
+      return full_path.string();
+    }
+  }
+
+  return "";
 }
 
 void eval_builtins(std::vector<std::string> args) {
@@ -61,11 +86,21 @@ void eval_builtins(std::vector<std::string> args) {
 
     auto op = args[1];
 
+    // builtins
     if (is_built_in(op)) {
       std::cout << std::format("{} is a shell builtin", op) << std::endl;
-    } else {
-      std::cout << std::format("{}: not found", op) << std::endl;
+      return;
     }
+
+    // executable files
+    auto op_path = find_cmd(op);
+    if (op_path.size() > 0) {
+      std::cout << std::format("{} is {}", op, op_path) << std::endl;
+      return;
+    }
+
+    // unkown
+    std::cout << std::format("{}: not found", op) << std::endl;
   }
 }
 
