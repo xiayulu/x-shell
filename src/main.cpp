@@ -100,7 +100,7 @@ void eval_builtins(std::vector<std::string> args) {
     }
 
     // unkown
-    std::cout << std::format("{}: not found", op);
+    std::cout << std::format("{}: not found", op) << std::endl;
   }
 }
 
@@ -134,7 +134,7 @@ void eval_others(std::vector<std::string> args) {
   absolute_cmd.insert(absolute_cmd.end(), std::next(args.cbegin()),
                       args.cend());
 
-  std::cout << exec(li::join(absolute_cmd).c_str());
+  std::cout << exec(li::join(absolute_cmd).c_str()); // <--- no endl here
 }
 
 void eval(std::string input) {
