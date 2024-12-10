@@ -421,3 +421,37 @@ std::string find_cmd(std::string cmd) {
   }
 ```
 
+## Run a program
+
+In this stage, you'll add support for running external programs with arguments.
+
+External programs are located using the `PATH` environment variable, as described in previous stages.
+
+### Tests
+
+The tester will execute your program like this:
+
+```bash
+./your_program.sh
+```
+
+It'll then send a command that you need to execute:
+
+```bash
+$ program_1234 alice
+Hello alice! The secret code is 1234.
+```
+
+The command (`program_1234`) in the example above will be present in `PATH` and will be an executable file.
+
+The tester will check if your shell correctly executes the given command and prints the output.
+
+### Notes
+
+- The program name, arguments and the expected output will be random for each test case.
+
+### Solution
+
+```c++
+```
+
