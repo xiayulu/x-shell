@@ -133,7 +133,8 @@ void eval_others(std::vector<std::string> args) {
   std::vector absolute_cmd{full_cmd};
   absolute_cmd.insert(absolute_cmd.end(), std::next(args.cbegin()),
                       args.cend());
-  std::cout << exec(li::join(absolute_cmd).c_str()) << std::endl;
+
+  std::cout << exec(li::join(absolute_cmd).c_str());
 }
 
 void eval(std::string input) {
