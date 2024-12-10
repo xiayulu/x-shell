@@ -453,5 +453,38 @@ The tester will check if your shell correctly executes the given command and pri
 ### Solution
 
 ```c++
+std::string exec(const char *cmd) {
+  std::array<char, 128> buffer;
+  std::string result;
+  std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+  if (!pipe) {
+    throw std::runtime_error("popen() failed!");
+  }
+  while (fgets(buffer.data(), static_cast<int>(buffer.size()), pipe.get()) !=
+         nullptr) {
+    result += buffer.data();
+  }
+  return result;
+}
+
+void eval_others(std::vector<std::string> args) {
+  auto cmd = args[0];
+
+  auto full_cmd = find_cmd(cmd);
+
+  // unkown cmd
+  if (full_cmd.size() == 0) {
+    std::cout << std::format("{}: command not found", args[0]) << std::endl;
+    return;
+  }
+
+  // executable file
+  std::vector absolute_cmd{full_cmd};
+  absolute_cmd.insert(absolute_cmd.end(), std::next(args.cbegin()),
+                      args.cend());
+
+  std::cout << exec(li::join(absolute_cmd).c_str()); // <--- no endl here
+}
+
 ```
 
