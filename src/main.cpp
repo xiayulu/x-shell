@@ -24,7 +24,7 @@ std::vector<std::string> parse_cmd(std::string input) {
 }
 
 bool is_built_in(std::string cmd) {
-  std::set<std::string> builtins{"exit", "echo"};
+  std::set<std::string> builtins{"exit", "echo", "type"};
 
   return builtins.find(cmd) != builtins.end();
 }
@@ -50,6 +50,22 @@ void eval_builtins(std::vector<std::string> args) {
     // join back as string
     std::cout << li::join(args) << std::endl;
     return;
+  }
+
+  // type
+  if (cmd == "type") {
+    // empty type op
+    if (args.size() <= 1) {
+      return;
+    }
+
+    auto op = args[1];
+
+    if (is_built_in(op)) {
+      std::cout << std::format("{} is a shell builtin", op) << std::endl;
+    } else {
+      std::cout << std::format("{}: not found", op) << std::endl;
+    }
   }
 }
 
