@@ -251,3 +251,16 @@ $
 ```
 
 After each command, the tester will check if the `echo` command correctly prints the provided text back.
+
+### Solution
+
+```c++
+  if (cmd == "echo") {
+    // remove first
+    args.erase(args.begin());
+    // join back as string
+    std::cout << li::join(args) << std::endl;
+    return;
+  }
+```
+
